@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard | Collaborative Editor</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+            color: #fff;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 40px;
+            background: rgba(0,0,0,0.25);
+        }
+
+        .navbar h2 { font-weight: 600; }
+        .navbar a {
+            color: #00e0ff;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .container { padding: 40px; }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+        }
+
+        .card {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(12px);
+            padding: 25px;
+            border-radius: 18px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.4);
+            transition: transform 0.3s;
+        }
+
+        .card:hover { transform: translateY(-6px); }
+
+        .card h3 { font-size: 16px; margin-bottom: 10px; }
+        .card p { font-size: 26px; font-weight: 600; }
+
+        .section { margin-top: 40px; }
+        .section h3 { margin-bottom: 20px; font-weight: 500; }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(255,255,255,0.12);
+            border-radius: 15px;
+            overflow: hidden;
+        }
+
+        th, td {
+            padding: 14px 18px;
+            text-align: left;
+            font-size: 14px;
+        }
+
+        th { background: rgba(0,0,0,0.3); }
+        tr:nth-child(even) { background: rgba(255,255,255,0.05); }
+
+        .status { font-weight: 600; color: #00e0ff; }
+
+        .btn-approve{
+            background:#00ff9d;
+            color:#000;
+            border:none;
+            padding:6px 12px;
+            border-radius:6px;
+            font-weight:600;
+            cursor:pointer;
+            margin-right:8px;
+            text-decoration:none;
+            display:inline-block;
+        }
+
+        .btn-reject{
+            background:#ff4d4d;
+            color:#fff;
+            border:none;
+            padding:6px 12px;
+            border-radius:6px;
+            font-weight:600;
+            cursor:pointer;
+            text-decoration:none;
+            display:inline-block;
+        }
+
+        .btn-approve:hover{opacity:0.85;}
+        .btn-reject:hover{opacity:0.85;}
+
+        .footer {
+            text-align: center;
+            padding: 15px;
+            font-size: 13px;
+            background: rgba(0,0,0,0.25);
+            margin-top: 50px;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="navbar">
+    <h2>Admin Dashboard</h2>
+    <a href="/admin/logout">Logout</a>
+</div>
+
+<div class="container">
+
+    <!-- STATS -->
+    <div class="stats">
+        <div class="card">
+            <h3>Total Users</h3>
+            <p>{{ total_users }}</p>
+        </div>
+
+        <div class="card">
+            <h3>Total Documents</h3>
+            <p>{{ total_docs }}</p>
+        </div>
+
+        <div class="card">
+            <h3>Active Editors</h3>
+            <p>{{ active_editors }}</p>
+        </div>
+
+        <div class="card">
+            <h3>System Status</h3>
+            <p class="status">Online</p>
+        </div>
+    </div>
+
+    <!-- USERS -->
+    <div class="section">
+        <h3>Registered Users</h3>
+        <table>
+            <tr>
+                <th>Username</th>
+                <th>Status</th>
+            </tr>
+            {% for user in users %}
+            <tr>
+                <td>{{ user }}</td>
+                <td>Active</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <!-- DOCUMENTS -->
+    <div class="section">
+        <h3>Documents</h3>
+        <table>
+            <tr>
+                <th>Document Name</th>
+                <th>Last Modified</th>
+            </tr>
+            {% for doc in documents %}
+            <tr>
+                <td>{{ doc }}</td>
+                <td>Recently</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <!-- RESTORE REQUESTS -->
+    <div class="section">
+        <h3>Restore Requests</h3>
+        <table>
+            <tr>
+                <th>User</th>
+                <th>Document</th>
+                <th>Version</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+
+            {% for req in restore_requests %}
+            <tr>
+                <td>{{ req.user }}</td>
+                <td>{{ req.doc_id }}</td>
+                <td>{{ req.version_file }}</td>
+                <td>{{ req.status }}</td>
+                <td>
+                    {% if req.status == 'PENDING' %}
+                        <a href="{{ url_for('approve_restore', req_id=req.id) }}" class="btn-approve">Approve</a>
+                        <a href="{{ url_for('reject_restore', req_id=req.id) }}" class="btn-reject">Reject</a>
+                    {% else %}
+                        {{ req.status }}
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+    <!-- LOGS -->
+    <div class="section">
+        <h3>System Logs</h3>
+        <table>
+            <tr>
+                <th>Time</th>
+                <th>Event</th>
+            </tr>
+            {% for log in logs %}
+            <tr>
+                <td>{{ log.time }}</td>
+                <td>{{ log.event }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+    </div>
+
+</div>
+
+<div class="footer">
+    Admin Control Panel | Real-Time Collaborative Editing System
+</div>
+
+</body>
+</html>

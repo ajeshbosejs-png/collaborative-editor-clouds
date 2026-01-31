@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document History | {{ doc_id }}</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:'Poppins',sans-serif;
+        }
+
+        body{
+            background: linear-gradient(135deg, #1d2671, #c33764);
+            color:#fff;
+            min-height:100vh;
+            padding:30px;
+        }
+
+        h2{
+            margin-bottom:25px;
+            font-weight:600;
+            text-align:center;
+            letter-spacing:0.5px;
+        }
+
+        /* TABLE */
+        table{
+            width:100%;
+            border-collapse: collapse;
+            background: rgba(255,255,255,0.12);
+            border-radius:12px;
+            overflow:hidden;
+            box-shadow:0 12px 30px rgba(0,0,0,0.35);
+        }
+
+        th, td{
+            padding:16px;
+            text-align:left;
+            border-bottom:1px solid rgba(255,255,255,0.15);
+        }
+
+        th{
+            background: rgba(0,0,0,0.35);
+            font-weight:600;
+            font-size:15px;
+            letter-spacing:0.5px;
+        }
+
+        td{
+            font-size:14px;
+            opacity:0.95;
+        }
+
+        /* BUTTONS */
+        .buttons{
+            display:flex;
+            gap:10px;
+            flex-wrap:wrap;
+        }
+
+        .request-btn{
+            background:#00e0ff;
+            border:none;
+            padding:8px 14px;
+            border-radius:8px;
+            color:#000;
+            font-weight:600;
+            cursor:pointer;
+            transition:0.3s;
+        }
+
+        .request-btn:hover{
+            background:#00bcd4;
+            transform:translateY(-2px);
+        }
+
+        .compare-btn{
+            background:#ffb400;
+            padding:8px 14px;
+            border-radius:8px;
+            text-decoration:none;
+            color:#000;
+            font-weight:600;
+            transition:0.3s;
+        }
+
+        .compare-btn:hover{
+            background:#e69500;
+            transform:translateY(-2px);
+        }
+
+        /* FLASH MESSAGE */
+        .flash-message{
+            background: rgba(0,0,0,0.35);
+            padding:12px;
+            margin-bottom:20px;
+            border-radius:10px;
+            text-align:center;
+            box-shadow:0 6px 15px rgba(0,0,0,0.3);
+        }
+
+        /* BACK LINK */
+        a.back{
+            display:inline-block;
+            margin-top:25px;
+            color:#ff4d4d;
+            font-weight:500;
+            text-decoration:none;
+            transition:0.3s;
+        }
+
+        a.back:hover{
+            text-decoration:underline;
+            opacity:0.85;
+        }
+
+        @media (max-width:768px){
+            table, th, td{ font-size:13px; }
+            .buttons{ flex-direction:column; }
+        }
+    </style>
+</head>
+
+<body>
+
+<h2>Document History: {{ doc_id }}</h2>
+
+<!-- Flash Messages -->
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <div class="flash-message">
+      {% for msg in messages %}
+        <p>{{ msg }}</p>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+<!-- Versions Table -->
+<table>
+    <thead>
+        <tr>
+            <th>Version Filename</th>
+            <th>Timestamp</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+
+    <tbody>
+    {% for v in versions %}
+        <tr>
+            <td>{{ v.filename }}</td>
+            <td>{{ v.timestamp }}</td>
+
+            <td class="buttons">
+
+                <!-- REQUEST RESTORE -->
+                <button class="request-btn" onclick="sendRequest('{{ doc_id }}', '{{ v.filename }}')">
+                    Request Restore
+                </button>
+
+                <!-- COMPARE -->
+                <a class="compare-btn"
+                   href="{{ url_for('compare_versions', doc_id=doc_id) }}?file1={{ v.filename }}&file2={{ versions[0].filename }}">
+                   Compare with latest
+                </a>
+
+            </td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<a class="back" href="{{ url_for('dashboard') }}">← Back to Dashboard</a>
+
+<!-- JS -->
+<script>
+function sendRequest(doc_id, filename){
+
+    fetch("/request_restore", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            doc_id: doc_id,
+            version_file: filename
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        alert(
+            "Restore request sent to admin successfully!\n\n" +
+            "Document: " + doc_id + "\n" +
+            "Version: " + filename
+        );
+    })
+    .catch(error => {
+        alert("Failed to send request to admin!");
+        console.error(error);
+    });
+}
+</script>
+
+</body>
+</html>

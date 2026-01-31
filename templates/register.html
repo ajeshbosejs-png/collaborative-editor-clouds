@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Register | Collaborative Editor</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1d2671, #c33764);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #fff;
+        }
+
+        .register-card {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(15px);
+            padding: 40px 35px;
+            border-radius: 18px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+            text-align: center;
+        }
+
+        .register-card h2 {
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .register-card p {
+            font-size: 14px;
+            margin-bottom: 25px;
+            opacity: 0.85;
+        }
+
+        .input-group {
+            margin-bottom: 18px;
+            text-align: left;
+        }
+
+        .input-group label {
+            font-size: 13px;
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 12px;
+            border: none;
+            outline: none;
+            font-size: 14px;
+        }
+
+        .btn-register {
+            width: 100%;
+            padding: 12px;
+            border-radius: 25px;
+            border: none;
+            background: #00e0ff;
+            color: #000;
+            font-weight: 600;
+            cursor: pointer;
+            margin-top: 10px;
+            transition: 0.3s;
+        }
+
+        .btn-register:hover {
+            background: #00bcd4;
+        }
+
+        .footer-links {
+            margin-top: 20px;
+            font-size: 13px;
+        }
+
+        .footer-links a {
+            color: #00e0ff;
+            text-decoration: none;
+        }
+
+        .footer-links a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 480px) {
+            .register-card {
+                padding: 30px 25px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="register-card">
+    <h2>Create Account</h2>
+    <p>Register to start collaborating in real-time</p>
+
+    <form method="POST" action="/register">
+        {% if error %}
+<div style="
+  background:#ff4d4d;
+  color:white;
+  padding:10px;
+  border-radius:8px;
+  margin-bottom:15px;
+  text-align:center;
+  font-size:14px;
+">
+  {{ error }}
+</div>
+{% endif %}
+
+        <div class="input-group">
+            <label>Username</label>
+            <input type="text" name="username" placeholder="Enter username" required>
+        </div>
+
+        <div class="input-group">
+            <label>Password</label>
+            <input type="password" name="password" placeholder="Enter password" required>
+        </div>
+
+        <button type="submit" class="btn-register">Register</button>
+    </form>
+
+    <div class="footer-links">
+        <p>Already have an account? <a href="/login">Login here</a></p>
+        <a href="/">← Back to Home</a>
+    </div>
+</div>
+
+</body>
+</html>

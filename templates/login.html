@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Login | Collaborative Editor</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1d2671, #c33764);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+        }
+
+        /* Login Card */
+        .login-container {
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            padding: 40px;
+            width: 360px;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            text-align: center;
+        }
+
+        .login-container h2 {
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .login-container p {
+            font-size: 14px;
+            opacity: 0.9;
+            margin-bottom: 30px;
+        }
+
+        /* Inputs */
+        .input-group {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            font-size: 13px;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border-radius: 10px;
+            border: none;
+            outline: none;
+            font-size: 14px;
+        }
+
+        .input-group input:focus {
+            box-shadow: 0 0 0 2px rgba(0,224,255,0.6);
+        }
+
+        /* Button */
+        .btn-login {
+            width: 100%;
+            padding: 12px;
+            border-radius: 30px;
+            border: none;
+            background: #00e0ff;
+            color: #000;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: 0.3s;
+            margin-top: 10px;
+        }
+
+        .btn-login:hover {
+            background: #00bcd4;
+        }
+
+        /* Footer Links */
+        .login-footer {
+            margin-top: 20px;
+            font-size: 13px;
+        }
+
+        .login-footer a {
+            color: #00e0ff;
+            text-decoration: none;
+        }
+
+        .login-footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Error Message */
+        .error {
+            background: rgba(255, 0, 0, 0.2);
+            padding: 8px;
+            border-radius: 8px;
+            font-size: 13px;
+            margin-bottom: 15px;
+            display: none;
+        }
+
+        /* Responsive */
+        @media (max-width: 400px) {
+            .login-container {
+                width: 90%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="login-container">
+    <h2>User Login</h2>
+    <p>Access your collaborative workspace</p>
+
+
+    <form method="POST" action="/login">
+
+        {% if error %}
+<div style="
+  background:#ff4d4d;
+  color:white;
+  padding:10px;
+  border-radius:8px;
+  margin-bottom:15px;
+  text-align:center;
+  font-size:14px;
+">
+  {{ error }}
+</div>
+{% endif %}
+
+        <div class="input-group">
+            <label>Username</label>
+            <input type="text" name="username" id="username" placeholder="Enter username" required>
+        </div>
+
+        <div class="input-group">
+            <label>Password</label>
+            <input type="password" name="password" id="password" placeholder="Enter password" required>
+            <small style="color:#ffcccc; font-size:12px;">
+  Password must be at least 8 characters
+</small>
+
+        </div>
+
+        <button class="btn-login" type="submit">Login</button>
+    </form>
+
+    <div class="login-footer">
+        <p>
+            Admin? <a href="/admin/login">Login here</a><br>
+            <a href="/">← Back to Home</a>
+        </p>
+    </div>
+</div>
+
+<script>
+    function validateLogin() {
+        const user = document.getElementById("username").value.trim();
+        const pass = document.getElementById("password").value.trim();
+
+        if (user === "" || pass === "") {
+            document.getElementById("errorMsg").style.display = "block";
+            document.getElementById("errorMsg").innerText = "All fields are required";
+            return false;
+        }
+        return true;
+    }
+</script>
+
+</body>
+</html>

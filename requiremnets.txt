@@ -1,0 +1,7 @@
+Flask
+Flask-SocketIO
+redis
+pyjwt
+werkzeug
+eventlet
+gunicorn

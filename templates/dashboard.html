@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dashboard | Collaborative Editor</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1d2671, #c33764);
+            color: #fff;
+        }
+
+        /* Navbar */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 50px;
+            background: rgba(0,0,0,0.2);
+        }
+
+        .navbar h2 {
+            font-weight: 600;
+        }
+
+        .navbar a {
+            color: #fff;
+            text-decoration: none;
+            margin-left: 20px;
+            font-size: 14px;
+        }
+
+        .navbar a:hover {
+            text-decoration: underline;
+        }
+
+        /* Container */
+        .container {
+            padding: 50px;
+        }
+
+        .container h3 {
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 22px;
+            border-radius: 25px;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+
+        .btn-create {
+            background: #00e0ff;
+            color: #000;
+        }
+
+        .btn-create:hover {
+            background: #00bcd4;
+        }
+
+        .btn-open {
+            background: #fff;
+            color: #000;
+        }
+
+        .btn-delete {
+            background: #ff4d4d;
+            color: #fff;
+        }
+
+        .btn-delete:hover {
+            background: #e60000;
+        }
+
+        /* Documents Grid */
+        .doc-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .doc-card {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.3);
+            transition: transform 0.3s;
+        }
+
+        .doc-card:hover {
+            transform: translateY(-8px);
+        }
+
+        .doc-card h4 {
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        .doc-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Empty State */
+        .empty {
+            margin-top: 40px;
+            font-size: 16px;
+            opacity: 0.8;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px;
+            }
+
+            .navbar {
+                padding: 15px 20px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+    <h2>Dashboard</h2>
+    <div>
+        <a href="/dashboard">Home</a>
+        <a href="/logout">Logout</a>
+    </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="container">
+
+    <h3>Your Documents</h3>
+
+    <!-- CREATE DOCUMENT -->
+    <form method="POST" action="/create">
+        <button class="btn btn-create" type="submit">+ Create New Document</button>
+    </form>
+
+    <!-- DOCUMENT LIST -->
+    {% if documents %}
+    <div class="doc-grid">
+        {% for doc in documents %}
+        <div class="doc-card">
+            <h4>Document ID</h4>
+            <p>{{ doc }}</p>
+
+            <div class="doc-actions">
+                <a href="/editor/{{ doc.split('.')[0] }}">
+                    <button class="btn btn-open">Open</button>
+                </a>
+
+                <form method="POST" action="/delete/{{ doc }}" onsubmit="return confirmDelete()">
+                    <button class="btn btn-delete" type="submit">Delete</button>
+                </form>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+        <p class="empty">No documents found. Create a new one to start editing.</p>
+    {% endif %}
+
+</div>
+
+<script>
+    function confirmDelete() {
+        return confirm("Are you sure you want to delete this document?");
+    }
+</script>
+
+</body>
+</html>
