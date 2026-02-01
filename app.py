@@ -26,7 +26,20 @@ app = Flask(__name__)
 app.secret_key = SECRET_KEY
 socketio = SocketIO(app)
 
-redis_client = redis.Redis(host="localhost", port=6379, decode_responses=True)
+# ✅ FIXED REDIS CONNECTION (uses Render REDIS_URL)
+redis_url = os.environ.get("REDIS_URL")
+
+if redis_url and redis_url.startswith("rediss://"):
+    redis_client = redis.from_url(
+        redis_url,
+        decode_responses=True,
+        ssl_cert_reqs=None
+    )
+else:
+    redis_client = redis.from_url(
+        redis_url,
+        decode_responses=True
+    )
 
 active_users = {}
 system_logs = []
@@ -257,7 +270,6 @@ def admin_dashboard():
         restore_requests=restore_requests
     )
 
-# -------- ADMIN APPROVE -------- #
 @app.route('/admin/approve_restore/<int:req_id>')
 def approve_restore(req_id):
     if not session.get("admin"):
@@ -289,7 +301,6 @@ def approve_restore(req_id):
 
     return redirect(url_for("admin_dashboard"))
 
-# -------- ADMIN REJECT -------- #
 @app.route('/admin/reject_restore/<int:req_id>')
 def reject_restore(req_id):
     if not session.get("admin"):
@@ -304,7 +315,6 @@ def reject_restore(req_id):
 
     return redirect(url_for("admin_dashboard"))
 
-# -------- COMPARE -------- #
 @app.route("/history/<doc_id>/compare")
 def compare_versions(doc_id):
     file1 = request.args.get("file1")
