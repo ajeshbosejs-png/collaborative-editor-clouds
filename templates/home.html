@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Real-Time Collaborative Editor | Multi-Cloud</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+
+    <style>
+        *{
+            margin:0;
+            padding:0;
+            box-sizing:border-box;
+            font-family:'Poppins',sans-serif;
+        }
+
+        body{
+            background: linear-gradient(135deg, #1d2671, #c33764);
+            color:white;
+            min-height:100vh;
+        }
+
+        /* Navbar */
+        .navbar{
+            display:flex;
+            justify-content:space-between;
+            align-items:center;
+            padding:20px 50px;
+            background:rgba(0,0,0,0.2);
+        }
+
+        .navbar h1{
+            font-size:24px;
+            font-weight:600;
+        }
+
+        .nav-links a{
+            color:white;
+            margin-left:25px;
+            text-decoration:none;
+            font-weight:400;
+        }
+
+        .nav-links a:hover{
+            text-decoration:underline;
+        }
+
+        /* Hero Section */
+        .hero{
+            display:flex;
+            flex-direction:column;
+            align-items:center;
+            justify-content:center;
+            text-align:center;
+            padding:100px 20px;
+        }
+
+        .hero h2{
+            font-size:42px;
+            font-weight:600;
+            margin-bottom:20px;
+        }
+
+        .hero p{
+            max-width:800px;
+            font-size:18px;
+            opacity:0.9;
+            margin-bottom:40px;
+        }
+
+        .hero-buttons{
+            display:flex;
+            gap:20px;
+        }
+
+        .btn{
+            padding:14px 28px;
+            border-radius:30px;
+            border:none;
+            cursor:pointer;
+            font-size:16px;
+            font-weight:500;
+            transition:0.3s;
+        }
+
+        .btn-primary{
+            background:#00e0ff;
+            color:#000;
+        }
+
+        .btn-primary:hover{
+            background:#00bcd4;
+        }
+
+        .btn-secondary{
+            background:transparent;
+            color:white;
+            border:2px solid white;
+        }
+
+        .btn-secondary:hover{
+            background:white;
+            color:#000;
+        }
+
+        /* Features Section */
+        .features{
+            background:#ffffff;
+            color:#000;
+            padding:70px 60px;
+        }
+
+        .features h3{
+            text-align:center;
+            font-size:32px;
+            margin-bottom:50px;
+            font-weight:600;
+        }
+
+        /* Grid */
+        .feature-grid{
+            display:grid;
+            grid-template-columns: repeat(3, 1fr); /* 3 + 3 */
+            gap:30px;
+        }
+
+        /* Cards */
+        .feature-card{
+            background:#f7f7f7;
+            padding:30px;
+            border-radius:15px;
+            box-shadow:0 10px 25px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .feature-card:hover{
+            transform: translateY(-8px);
+        }
+
+        .feature-card h4{
+            margin-bottom:15px;
+            color:#1d2671;
+            font-size:18px;
+            font-weight:600;
+        }
+
+        .feature-card p{
+            font-size:15px;
+            line-height:1.6;
+            color:#333;
+        }
+
+        /* Footer */
+        footer{
+            text-align:center;
+            padding:20px;
+            background:rgba(0,0,0,0.2);
+            font-size:14px;
+        }
+
+        /* Responsive */
+        @media (max-width: 900px){
+            .feature-grid{
+                grid-template-columns:1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<div class="navbar">
+    <h1>Collaborative Editor</h1>
+    <div class="nav-links">
+        <a href="/">Home</a>
+        <a href="/register">Register</a>
+        <a href="/login">User Login</a>
+        <a href="/admin/login">Admin Login</a>
+    </div>
+</div>
+
+<!-- HERO SECTION -->
+<section class="hero">
+    <h2>Real-Time Collaborative Document Editing</h2>
+    <p>
+        A secure, scalable, and multi-cloud enabled collaborative document editor
+        built using Flask, WebSockets, Redis, JWT authentication, and Operational Transformation.
+    </p>
+
+    <div class="hero-buttons">
+        <button class="btn btn-primary" onclick="goLogin()">Get Started</button>
+        <button class="btn btn-secondary" onclick="scrollFeatures()">View Features</button>
+    </div>
+</section>
+
+<!-- FEATURES -->
+<section class="features" id="features">
+    <h3>Key Features</h3>
+
+    <div class="feature-grid">
+
+        <div class="feature-card">
+            <h4>Real-Time Collaboration</h4>
+            <p>Multiple users can edit documents simultaneously with instant synchronization.</p>
+        </div>
+
+        <div class="feature-card">
+            <h4>Operational Transformation</h4>
+            <p>Conflicting edits are resolved intelligently to maintain data consistency.</p>
+        </div>
+
+        <div class="feature-card">
+            <h4>JWT Security</h4>
+            <p>Secure authentication and role-based access using JSON Web Tokens.</p>
+        </div>
+
+        <div class="feature-card">
+            <h4>Multi-Cloud Storage</h4>
+            <p>Documents are stored and replicated across multiple cloud platforms.</p>
+        </div>
+
+        <div class="feature-card">
+            <h4>Version Control</h4>
+            <p>Automatic document version history with rollback support.</p>
+        </div>
+
+        <div class="feature-card">
+            <h4>Admin Dashboard</h4>
+            <p>System monitoring, user tracking, and document management.</p>
+        </div>
+
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+    © 2025 | Real-Time Collaborative Document Editing System 
+</footer>
+
+<!-- JS -->
+<script>
+    function goLogin(){
+        window.location.href = "/login";
+    }
+
+    function scrollFeatures(){
+        document.getElementById("features").scrollIntoView({behavior:"smooth"});
+    }
+</script>
+
+</body>
+</html>
